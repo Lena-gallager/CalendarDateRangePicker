@@ -1,24 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: "io.gitlab.arturbosch.detekt"
-
-ext {
-    PUBLISH_GROUP_ID = 'io.github.architshah248.calendar'
-    PUBLISH_VERSION = '2.0.0'
-    PUBLISH_ARTIFACT_ID = 'awesome-calendar'     // Has to be same as your library module name
-    PUBLISH_DESCRIPTION = 'Android library to select range of dates.'
-
-    PUBLISH_URL = 'https://github.com/ArchitShah248/CalendarDateRangePicker'
-    PUBLISH_LICENSE_NAME = 'Apache License'
-    PUBLISH_LICENSE_URL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-
-    PUBLISH_DEVELOPER_ID = 'architshah248'
-    PUBLISH_DEVELOPER_NAME = 'Archit Shah'
-    PUBLISH_DEVELOPER_EMAIL = 'architshah248@gmail.com'
-    PUBLISH_SCM_CONNECTION = 'scm:git:github.com/ArchitShah248/CalendarDateRangePicker.git'
-    PUBLISH_SCM_DEVELOPER_CONNECTION = 'scm:git:ssh://github.com/ArchitShah248/CalendarDateRangePicker.git'
-    PUBLISH_SCM_URL = 'https://github.com/ArchitShah248/CalendarDateRangePicker/tree/master'
-}
+apply plugin: "maven-publish"
 
 android {
     compileSdkVersion 33
@@ -63,8 +46,21 @@ dependencies {
     androidTestImplementation "io.mockk:mockk-android:$mockk_version"
 }
 
-apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
-
 repositories {
     mavenCentral()
+    mavenLocal()
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'io.github.architshah248.calendar'
+            artifactId = 'awesome-calendar'
+            version = '2.0.0'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
 }
