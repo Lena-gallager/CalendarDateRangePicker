@@ -100,6 +100,12 @@ interface DateRangeCalendarViewApi {
     fun setFixedDaysSelection(numberOfDaysSelection: Int)
 
     /**
+     * Sets array of months that will be displayed in the view
+     * Array must starts with the first month (January)
+     */
+    fun setMonths(months: Array<String>)
+
+    /**
      * To get start date.
      */
     val startDate: Calendar?

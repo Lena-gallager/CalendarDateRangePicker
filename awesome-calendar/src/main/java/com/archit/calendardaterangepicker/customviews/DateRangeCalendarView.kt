@@ -30,6 +30,7 @@ class DateRangeCalendarView : LinearLayout, DateRangeCalendarViewApi {
     private lateinit var vpCalendar: ViewPager
     private lateinit var calendarStyleAttr: CalendarStyleAttributes
     private lateinit var mDateRangeCalendarManager: CalendarDateRangeManagerImpl
+    private lateinit var months: Array<String>
 
     constructor(context: Context) : super(context) {
         initViews(context, null)
@@ -45,6 +46,7 @@ class DateRangeCalendarView : LinearLayout, DateRangeCalendarViewApi {
 
     private fun initViews(context: Context, attrs: AttributeSet?) {
         locale = context.resources.configuration.locale
+        months = DateFormatSymbols(locale).months
         calendarStyleAttr = CalendarStyleAttrImpl(context, attrs)
         val layoutInflater = LayoutInflater.from(context)
         layoutInflater.inflate(layout.layout_calendar_container, this, true)
@@ -117,7 +119,7 @@ class DateRangeCalendarView : LinearLayout, DateRangeCalendarViewApi {
      */
     private fun setCalendarYearTitle(position: Int) {
         val currentCalendarMonth = mDateRangeCalendarManager.getVisibleMonthDataList()[position]
-        var dateText = DateFormatSymbols(locale).months[currentCalendarMonth[Calendar.MONTH]]
+        var dateText = months[currentCalendarMonth[Calendar.MONTH]]
         dateText = dateText.substring(0, 1).toUpperCase() + dateText.subSequence(1, dateText.length)
         val yearTitle = dateText + " " + currentCalendarMonth[Calendar.YEAR]
         tvYearTitle.text = yearTitle
@@ -263,6 +265,11 @@ class DateRangeCalendarView : LinearLayout, DateRangeCalendarViewApi {
     override fun setFixedDaysSelection(numberOfDaysSelection: Int) {
         calendarStyleAttr.fixedDaysSelectionNumber = numberOfDaysSelection
         adapterEventCalendarMonths.invalidateCalendar()
+    }
+
+    override fun setMonths(months: Array<String>) {
+        this.months = months
+        setCalendarYearTitle(vpCalendar.currentItem)
     }
 
     companion object {
